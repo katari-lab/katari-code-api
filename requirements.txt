@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+openai
+black
+pydantic
+radon
+code2flow
