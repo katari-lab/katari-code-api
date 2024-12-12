@@ -15,5 +15,13 @@ class TestCodeComponent(unittest.TestCase):
             1 = 2
         """
         result = CodeComponent().code(code_snippet)
-        self.assertTrue(result)
+        self.assertFalse(result)  #> The test should assert False for invalid code
         print(result)
+
+    def test_valid_python_code(self):
+        code_snippet = """
+        def function(self):
+            return 1 + 2
+        """
+        result = CodeComponent().code(code_snippet)
+        self.assertTrue(result)

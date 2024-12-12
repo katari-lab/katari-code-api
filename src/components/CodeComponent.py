@@ -15,6 +15,7 @@ class CodeComponent:
             Do not modify the values within quotes or replace functions.
             Improve naming, fix typos, and enhance logic descriptions.
             Just return the improved code without a natural language explanation.
+            If you find a comment starting with #> you must implement the functionality in the commend bellow that mark.
             """, 
             prompt=document,
             temperature=0.3
