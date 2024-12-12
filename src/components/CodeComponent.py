@@ -1,18 +1,26 @@
+
 from ..gateways.GPTGateway import GPTGateway
+
 class CodeComponent:
 
     def __init__(self):
-        self.gateway = GPTGateway()
+        self.gpt_gateway = GPTGateway()
 
     def code(self, document: str):
-        response = self.gateway.question_llm(
+        code_block_delimiter = "```"
+        response = self.gpt_gateway.ask_llm(
             system="""
-            your a system expert code that return improve code from the code that you receive without change the behavior.
-            the code that you recommend must improve the naming, fix typos and logic description
-            just return the better code without a natural language explanation
-            """, prompt=document)
-        text = response.choices[0].message.content
-        text = text.replace("```python", "")
-        if text[-3:]== "```":
-            text = text[:-3]
-        return text
+            You are a system expert that improves code without changing its behavior.
+            Do not change class or method names.
+            Do not modify the values within quotes or replace functions.
+            Improve naming, fix typos, and enhance logic descriptions.
+            Just return the improved code without a natural language explanation.
+            """, 
+            prompt=document,
+            temperature=0.3
+        )
+        improved_code = response.choices[0].message.content
+        improved_code = improved_code.replace(f"{code_block_delimiter}python", "")
+        if improved_code.endswith(code_block_delimiter):
+            improved_code = improved_code[:-3]
+        return improved_code

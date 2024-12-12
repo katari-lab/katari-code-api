@@ -1,3 +1,4 @@
+
 from typing import List
 import openai
 import os
@@ -5,7 +6,6 @@ from openai import OpenAI
 import logging
 
 LOGGER = logging.getLogger(__name__)
-
 
 class GPTGateway:
     def __init__(self) -> None:
@@ -34,26 +34,26 @@ class GPTGateway:
         )
         return assistant
 
-    def update_instructions_assistant(self, assistant_id, instructions):
+    def update_assistant_instructions(self, assistant_id, instructions):
         return self.client.beta.assistants.update(
             assistant_id, instructions=instructions, tools=[{"type": "file_search"}]
         )
 
-    def update_vectors_ids(self, assistant_id, vectors_ids: List):
+    def update_vector_store_ids(self, assistant_id, vector_store_ids: List):
         return self.client.beta.assistants.update(
             assistant_id,
-            tool_resources={"file_search": {"vector_store_ids": vectors_ids}},
+            tool_resources={"file_search": {"vector_store_ids": vector_store_ids}},
         )
 
-    def update_temperature(self, assistant_id, temperature: float):
+    def update_assistant_temperature(self, assistant_id, temperature: float):
         return self.client.beta.assistants.update(assistant_id, temperature=temperature)
 
-    def update_response_type(self, assistant_id, response_format):
+    def update_assistant_response_format(self, assistant_id, response_format):
         return self.client.beta.assistants.update(
             assistant_id, response_format=response_format
         )
 
-    def update_top_p(self, assistant_id, top_p: float):
+    def update_assistant_top_p(self, assistant_id, top_p: float):
         return self.client.beta.assistants.update(assistant_id, top_p=top_p)
 
     def create_thread(self):
@@ -77,39 +77,34 @@ class GPTGateway:
         else:
             raise ValueError(run.status)
 
-    def vector_store_description(self, name: str):
+    def describe_vector_store(self, name: str):
         # vector_store = self.client.beta.vector_stores.retrieve(vector_store_id=name)
-        for v in self.client.beta.vector_stores.list():
-            print(v)
+        for vector_store in self.client.beta.vector_stores.list():
+            print(vector_store)
         # return vector_store
 
-    def vector_store_list(self):
+    def list_vector_stores(self):
         result = []
-        for v in self.client.beta.vector_stores.list():
-            result.append(v)
+        for vector_store in self.client.beta.vector_stores.list():
+            result.append(vector_store)
         return result
 
-    def upload_file_to_vector_store(self, name: str, file_paths):
-        # Create a vector store called
+    def upload_files_to_vector_store(self, name: str, file_paths):
         vector_store = self.client.beta.vector_stores.create(name=name)
-        # Ready the files for upload to OpenAI
         file_streams = [open(path, "rb") for path in file_paths]
 
-        # Use the upload and poll SDK helper to upload the files, add them to the vector store,
-        # and poll the status of the file batch for completion.
         file_batch = self.client.beta.vector_stores.file_batches.upload_and_poll(
             vector_store_id=vector_store.id, files=file_streams
         )
 
-        # You can print the status and the file counts of the batch to see the result of this operation.
         LOGGER.info(file_batch.status)
         LOGGER.info(file_batch.file_counts)
         LOGGER.info(vector_store.id)
         return vector_store.id
 
-    def question_llm(
-        self, system: str, prompt: str, model="gpt-4o", temperature=0.8, max_tokens=1000 
-    ): # gpt-4o-mini , gpt-4o
+    def ask_llm(
+        self, system: str, prompt: str, model="gpt-4o", temperature=0.8, max_tokens=2000
+    ):
         try:
             chat_completion = self.client.chat.completions.create(
                 temperature=temperature,
@@ -122,5 +117,4 @@ class GPTGateway:
             )
             return chat_completion
         except Exception as ex:
-            raise ValueError(f"{model}") from ex
-
+            raise ValueError(f"Error with model {model}") from ex

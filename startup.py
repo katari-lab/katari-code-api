@@ -54,16 +54,11 @@ def create_app() -> FastAPI:
     return app
 
 
+current_directory = os.path.dirname(os.path.abspath(__file__))
+ini_file_path = os.path.join(current_directory, "startup.ini")
+
+load_configurations(ini_file_path)
+setup_logging()    
 app = create_app() 
 
-if __name__ == "__main__":
-    
-    current_directory = os.path.dirname(os.path.abspath(__file__))
-    ini_file_path = os.path.join(current_directory, "startup.ini")
-
-    load_configurations(ini_file_path)
-    setup_logging()    
-
-    import uvicorn
-    uvicorn.run("startup:app", host="0.0.0.0", port=8000, reload=True)
-    # Run: uvicorn startup:app --host 0.0.0.0 --port 8000 --reload
+# Run: uvicorn startup:app --host 0.0.0.0 --port 8000 --reload
