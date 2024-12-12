@@ -1,3 +1,4 @@
+
 from fastapi import FastAPI, Request
 import os
 import logging
@@ -6,49 +7,63 @@ from contextlib import asynccontextmanager
 import configparser
 from starlette.responses import PlainTextResponse
 
-current_directory = os.path.dirname(os.path.abspath(__file__))
-ini_file_path = os.path.join(current_directory, "./startup.ini")
-config = configparser.ConfigParser()
-config.read(ini_file_path)
+def load_configurations(file_path: str):
+    config = configparser.ConfigParser()
+    config.read(file_path)
+    
+    if not os.path.exists(os.path.abspath(file_path)):
+        raise ValueError(f"Configuration file not found: {os.path.abspath(file_path)}")
+    
+    for key, value in config["DEFAULT"].items():
+        os.environ[key] = value
 
-if not os.path.exists(os.path.abspath(ini_file_path)):
-    raise ValueError(os.path.abspath(ini_file_path))
-
-for key, value in config["DEFAULT"].items():
-    os.environ[key] = value
-
-logging.basicConfig(
-    level=logging.DEBUG,  # Minimum logging level
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler("app.log"),  # Logs to a file
-        logging.StreamHandler()         # Logs to the console
-    ]
-)
+def setup_logging():
+    logging.basicConfig(
+        level=logging.DEBUG,
+        format='%(asctime)s - %(levelname)s - %(message)s',
+        handlers=[
+            logging.FileHandler("app.log"),
+            logging.StreamHandler()
+        ]
+    )
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):        
-    logging.info("init")    
-    yield        
+async def lifespan(app: FastAPI):
+    logging.info("App initialization")
+    yield
 
-app = FastAPI(lifespan=lifespan)
+def create_app() -> FastAPI:
+    app = FastAPI(lifespan=lifespan)
 
-@app.get("/")
-async def read_root(request: Request):
-    body = await request.body()
-    body_text = body.decode("utf-8")
-    logging.info(body_text)
-    component = CodeComponent()    
-    response = component.code(body_text)            
-    return {"content": response}
+    @app.get("/")
+    async def read_root(request: Request):
+        body_text = (await request.body()).decode("utf-8")
+        logging.info(body_text)
+        component = CodeComponent()
+        response = component.code(body_text)
+        return {"content": response}
 
-@app.post("/code")
-async def post_code(request: Request):
-    body = await request.body()
-    body_text = body.decode("utf-8")
-    logging.info(body_text)
-    component = CodeComponent()    
-    response = component.code(body_text)                
-    return PlainTextResponse(content=response)    
+    @app.post("/code")
+    async def post_code(request: Request):
+        body_text = (await request.body()).decode("utf-8")
+        logging.info(body_text)
+        component = CodeComponent()
+        response = component.code(body_text)
+        return PlainTextResponse(content=response)
 
-# uvicorn startup:app --host 0.0.0.0 --port 8000 --reload
+    return app
+
+
+app = create_app() 
+
+if __name__ == "__main__":
+    
+    current_directory = os.path.dirname(os.path.abspath(__file__))
+    ini_file_path = os.path.join(current_directory, "startup.ini")
+
+    load_configurations(ini_file_path)
+    setup_logging()    
+
+    import uvicorn
+    uvicorn.run("startup:app", host="0.0.0.0", port=8000, reload=True)
+    # Run: uvicorn startup:app --host 0.0.0.0 --port 8000 --reload
