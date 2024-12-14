@@ -1,7 +1,7 @@
-
 import unittest
 from src.components.CodeComponent import CodeComponent
 from ..common import load_ini_and_set_env
+
 
 class TestCodeComponent(unittest.TestCase):
 
@@ -15,7 +15,7 @@ class TestCodeComponent(unittest.TestCase):
             1 = 2
         """
         result = CodeComponent().code(code_snippet)
-        self.assertFalse(result)  #> The test should assert False for invalid code
+        self.assertFalse(result)  # > The test should assert False for invalid code
         print(result)
 
     def test_valid_python_code(self):

@@ -1,5 +1,5 @@
-
 from ..gateways.GPTGateway import GPTGateway
+
 
 class CodeComponent:
 
@@ -16,9 +16,9 @@ class CodeComponent:
             Improve naming, fix typos, and enhance logic descriptions.
             Just return the improved code without a natural language explanation.
             If you find a comment starting with #> you must implement the functionality in the commend bellow that mark.
-            """, 
+            """,
             prompt=document,
-            temperature=0.3
+            temperature=0.3,
         )
         improved_code = response.choices[0].message.content
         improved_code = improved_code.replace(f"{code_block_delimiter}python", "")

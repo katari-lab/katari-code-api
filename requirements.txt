@@ -5,3 +5,12 @@ black
 pydantic
 radon
 code2flow
+librosa
+pydub
+simpleaudio
+pydub
+pyaudioconvert
+samplerate 
+pyaudio
+python-multipart
+black

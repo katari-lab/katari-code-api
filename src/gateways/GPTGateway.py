@@ -1,4 +1,3 @@
-
 from typing import List
 import openai
 import os
@@ -6,6 +5,7 @@ from openai import OpenAI
 import logging
 
 LOGGER = logging.getLogger(__name__)
+
 
 class GPTGateway:
     def __init__(self) -> None:

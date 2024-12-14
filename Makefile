@@ -3,3 +3,6 @@ dependencies:
 
 radon: 
 	- radon cc .\startup.py
+
+lint:
+	- black .
