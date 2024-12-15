@@ -20,5 +20,6 @@ class CodeComponent:
             prompt=document,
             temperature=0.3,
         )
-        return GptResponseCleaner.clean_code_response(filename, document)
+        improved_code = response.choices[0].message.content
+        return GptResponseCleaner.clean_code_response(filename, improved_code)
         

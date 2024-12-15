@@ -4,6 +4,7 @@ from io import BytesIO
 import os
 import logging
 from src.components.CodeComponent import CodeComponent
+from src.components.TestingComponent import TestingComponent
 from contextlib import asynccontextmanager
 import configparser
 from starlette.responses import PlainTextResponse
@@ -56,6 +57,15 @@ def create_app() -> FastAPI:
         body_text = (await request.body()).decode("utf-8")        
         component = CodeComponent()
         response = component.lint_code(filename, body_text)
+        return PlainTextResponse(content=response)
+    
+    @app.post("/test")
+    async def post_test(request: Request):
+        filename = request.query_params.get("filename") 
+        LOGGER.info("lint code %s", filename)
+        body_text = (await request.body()).decode("utf-8")        
+        component = TestingComponent()
+        response = component.create_unit_test(filename, body_text)
         return PlainTextResponse(content=response)
 
     @app.post("/commands/transcript")
