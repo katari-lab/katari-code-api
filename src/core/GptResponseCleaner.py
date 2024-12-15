@@ -18,5 +18,7 @@ class GptResponseCleaner:
         cleaned_code = response.replace(f"{code_block_delimiter}{language_block}", "")
         if cleaned_code.endswith(code_block_delimiter):
             cleaned_code = cleaned_code[:-len(code_block_delimiter)]
-
+        
+        cleaned_code = cleaned_code.lstrip("\n")
+        cleaned_code = cleaned_code.rstrip("\n")
         return cleaned_code

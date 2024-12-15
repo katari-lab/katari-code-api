@@ -62,7 +62,7 @@ def create_app() -> FastAPI:
     @app.post("/test")
     async def post_test(request: Request):
         filename = request.query_params.get("filename") 
-        LOGGER.info("lint code %s", filename)
+        LOGGER.info("update test: %s", filename)
         body_text = (await request.body()).decode("utf-8")        
         component = TestingComponent()
         response = component.create_unit_test(filename, body_text)
