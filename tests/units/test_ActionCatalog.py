@@ -3,6 +3,10 @@ from src.core.ActionCatalog import ActionCatalog
 
 class TestActionCatalog(unittest.TestCase):
 
+    def test_kubectl_get_pods(self):        
+        result = ActionCatalog.from_transcript_to_action("cubectl  get  Bots")
+        self.assertEqual("kubectl get pods", result)
+
     def test_from_transcript_to_action_empty(self):
         result = ActionCatalog.from_transcript_to_action("")
         self.assertEqual(result, "")
@@ -56,6 +60,14 @@ class TestActionCatalog(unittest.TestCase):
     def test_from_transcript_to_action_extra_spaces_between_words(self):
         result = ActionCatalog.from_transcript_to_action("kubectl  apply  bots")
         self.assertEqual(result, "kubectl apply pods")
+
+    def test_from_transcript_to_action_multiple_replacements(self):
+        result = ActionCatalog.from_transcript_to_action("cubectl get bots and pods")
+        self.assertEqual(result, "kubectl get pods and pods")
+
+    def test_from_transcript_to_action_only_spaces(self):
+        result = ActionCatalog.from_transcript_to_action("    ")
+        self.assertEqual(result, "")
 
 if __name__ == '__main__':
     unittest.main()

@@ -12,8 +12,12 @@ class GptResponseCleaner:
 
         if extension == "py":
             language_block = "python"
-        if extension == "txt":
+        elif extension == "txt":
             language_block = "plaintext"
+        elif extension == "js":
+            language_block = "javascript"
+        else:
+            language_block = "unknown"
 
         cleaned_code = response.replace(f"{code_block_delimiter}{language_block}", "")
         if cleaned_code.endswith(code_block_delimiter):
