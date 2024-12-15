@@ -41,5 +41,21 @@ class TestActionCatalog(unittest.TestCase):
         result = ActionCatalog.from_transcript_to_action("  kubectl  apply  ")
         self.assertEqual(result, "kubectl apply")
 
+    def test_from_transcript_to_action_mixed_case_and_spaces(self):
+        result = ActionCatalog.from_transcript_to_action("  CuBeCtL  aPpLy  bOtS  ")
+        self.assertEqual(result, "kubectl apply pods")
+
+    def test_from_transcript_to_action_no_replacements(self):
+        result = ActionCatalog.from_transcript_to_action("list all services")
+        self.assertEqual(result, "list all services")
+
+    def test_from_transcript_to_action_leading_and_trailing_spaces(self):
+        result = ActionCatalog.from_transcript_to_action("  list all services  ")
+        self.assertEqual(result, "list all services")
+
+    def test_from_transcript_to_action_extra_spaces_between_words(self):
+        result = ActionCatalog.from_transcript_to_action("kubectl  apply  bots")
+        self.assertEqual(result, "kubectl apply pods")
+
 if __name__ == '__main__':
     unittest.main()

@@ -15,6 +15,7 @@ class TestingComponent:
             You will receive the source code under the test and the existing test code.
             You can not modify the source code under the test and that can not be part of your response.
             Your response must consider the existing test code and update with your recommendations.
+            You must not include recommendations in natural language.
             For example: 
             class Demo:
                 def action(self, a , b):
