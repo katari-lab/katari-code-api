@@ -15,7 +15,7 @@ class TestingComponent:
             You will receive the source code under the test and the existing test code.
             You can not modify the source code under the test and that can not be part of your response.
             You should not modify the existing test code, but you should include new test methods recommended.
-            You must check if the new method is a new case and do not duplicate the test scenarios.
+            You must check the comment and validate to do not duplicate the test scenario.
             For each new test method included, you must include a comment in  python explaining the scenario to validate 
             You must not include recommendations in natural language.
             For example: 
