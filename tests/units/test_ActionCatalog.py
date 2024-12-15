@@ -112,5 +112,10 @@ class TestActionCatalog(unittest.TestCase):
         result = ActionCatalog.from_transcript_to_action("kubectl 456 unknown bots")
         self.assertEqual(result, "kubectl 456 unknown pods")
 
+    # Test scenario where the transcript contains mixed known words and punctuation
+    def test_from_transcript_to_action_known_words_with_punctuation(self):
+        result = ActionCatalog.from_transcript_to_action("kubectl, get bots.")
+        self.assertEqual(result, "kubectl, get pods.")
+
 if __name__ == '__main__':
     unittest.main()
