@@ -6,3 +6,7 @@ radon:
 
 lint:
 	- black .
+
+unittest:
+	- python -m unittest discover -s tests/units -p 'test_*.py'
+

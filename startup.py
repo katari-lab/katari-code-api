@@ -8,9 +8,10 @@ from contextlib import asynccontextmanager
 import configparser
 from starlette.responses import PlainTextResponse
 from src.components.TranscriptComponent import TranscriptComponent
-
+import logging
 SAVE_DIR = "./uploaded_files"
 
+LOGGER = logging.getLogger(__name__)
 
 def load_configurations(file_path: str):
     config = configparser.ConfigParser()
@@ -50,10 +51,11 @@ def create_app() -> FastAPI:
 
     @app.post("/code")
     async def post_code(request: Request):
-        body_text = (await request.body()).decode("utf-8")
-        logging.info(body_text)
+        filename = request.query_params.get("filename") 
+        LOGGER.info("lint code %s", filename)
+        body_text = (await request.body()).decode("utf-8")        
         component = CodeComponent()
-        response = component.code(body_text)
+        response = component.lint_code(filename, body_text)
         return PlainTextResponse(content=response)
 
     @app.post("/commands/transcript")

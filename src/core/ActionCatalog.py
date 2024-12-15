@@ -1,20 +1,17 @@
+
 class ActionCatalog:
     
     catalog = {
         'kubectl': 'kubectl',
-        'cubectl': 'kubectl'
+        'cubectl': 'kubectl',
+        'bots': 'pods'
     }
         
-
     @staticmethod
     def from_transcript_to_action(transcript: str):
-        transcript = transcript.lower()
-        transcript = transcript.strip()
-        transcript = transcript.replace("  ", " ")
+        if not transcript:
+            return transcript
+        transcript = transcript.lower().strip().replace("  ", " ")
         words = transcript.split(' ')
-        result = []
-        for w in words:
-            result.append(ActionCatalog.catalog.get(w, w))                    
+        result = [ActionCatalog.catalog.get(word, word) for word in words]
         return ' '.join(result)
-
-
