@@ -77,5 +77,20 @@ class TestActionCatalog(unittest.TestCase):
         result = ActionCatalog.from_transcript_to_action("kubectl get 123 bots")
         self.assertEqual(result, "kubectl get 123 pods")
 
+    # Test scenario where the transcript contains mixed known and unknown words
+    def test_from_transcript_to_action_mixed_known_and_unknown_words(self):
+        result = ActionCatalog.from_transcript_to_action("kubectl unknown bots")
+        self.assertEqual(result, "kubectl unknown pods")
+
+    # Test scenario where the transcript contains only unknown words
+    def test_from_transcript_to_action_only_unknown_words(self):
+        result = ActionCatalog.from_transcript_to_action("unknown unknown unknown")
+        self.assertEqual(result, "unknown unknown unknown")
+
+    # Test scenario where the transcript contains repeated known words
+    def test_from_transcript_to_action_repeated_known_words(self):
+        result = ActionCatalog.from_transcript_to_action("bots bots bots")
+        self.assertEqual(result, "pods pods pods")
+
 if __name__ == '__main__':
     unittest.main()
