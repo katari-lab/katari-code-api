@@ -92,5 +92,15 @@ class TestActionCatalog(unittest.TestCase):
         result = ActionCatalog.from_transcript_to_action("bots bots bots")
         self.assertEqual(result, "pods pods pods")
 
+    # Test scenario with a combination of known, unknown, and special characters
+    def test_from_transcript_to_action_combined_known_unknown_special(self):
+        result = ActionCatalog.from_transcript_to_action("kubectl unknown @bots!")
+        self.assertEqual(result, "kubectl unknown @bots!")
+
+    # Test scenario where the transcript is a single known word with extra spaces
+    def test_from_transcript_to_action_single_known_word_with_spaces(self):
+        result = ActionCatalog.from_transcript_to_action("  kubectl  ")
+        self.assertEqual(result, "kubectl")
+
 if __name__ == '__main__':
     unittest.main()
