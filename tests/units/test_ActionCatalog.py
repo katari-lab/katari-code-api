@@ -52,5 +52,15 @@ class TestActionCatalog(unittest.TestCase):
         result = ActionCatalog.from_transcript_to_action("bots get cubectl")
         self.assertEqual("pods get kubectl", result)
 
+    # Test with a transcript containing a single catalog word
+    def test_single_catalog_word(self):
+        result = ActionCatalog.from_transcript_to_action("kubectl")
+        self.assertEqual("kubectl", result)
+
+    # Test with a transcript containing a single non-catalog word
+    def test_single_non_catalog_word(self):
+        result = ActionCatalog.from_transcript_to_action("deploy")
+        self.assertEqual("deploy", result)    
+
 if __name__ == '__main__':
     unittest.main()
