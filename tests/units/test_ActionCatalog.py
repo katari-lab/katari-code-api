@@ -69,5 +69,13 @@ class TestActionCatalog(unittest.TestCase):
         result = ActionCatalog.from_transcript_to_action("    ")
         self.assertEqual(result, "")
 
+    def test_from_transcript_to_action_special_characters(self):
+        result = ActionCatalog.from_transcript_to_action("kubectl get @bots!")
+        self.assertEqual(result, "kubectl get @bots!")
+
+    def test_from_transcript_to_action_numeric_values(self):
+        result = ActionCatalog.from_transcript_to_action("kubectl get 123 bots")
+        self.assertEqual(result, "kubectl get 123 pods")
+
 if __name__ == '__main__':
     unittest.main()
