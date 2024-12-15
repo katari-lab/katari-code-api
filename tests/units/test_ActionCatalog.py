@@ -42,5 +42,15 @@ class TestActionCatalog(unittest.TestCase):
         result = ActionCatalog.from_transcript_to_action("CuBeCtL GeT BoTs")
         self.assertEqual("kubectl get pods", result)
 
+    # Test with a transcript that contains only spaces
+    def test_transcript_only_spaces(self):
+        result = ActionCatalog.from_transcript_to_action("     ")
+        self.assertEqual("", result)
+
+    # Test with a transcript that contains catalog words in different orders
+    def test_catalog_words_different_order(self):
+        result = ActionCatalog.from_transcript_to_action("bots get cubectl")
+        self.assertEqual("pods get kubectl", result)
+
 if __name__ == '__main__':
     unittest.main()
