@@ -107,5 +107,10 @@ class TestActionCatalog(unittest.TestCase):
         result = ActionCatalog.from_transcript_to_action("kubectl 123 bots")
         self.assertEqual(result, "kubectl 123 pods")
 
+    # Test scenario where the transcript contains a mix of known, unknown, and numeric values
+    def test_from_transcript_to_action_known_unknown_numeric(self):
+        result = ActionCatalog.from_transcript_to_action("kubectl 456 unknown bots")
+        self.assertEqual(result, "kubectl 456 unknown pods")
+
 if __name__ == '__main__':
     unittest.main()
