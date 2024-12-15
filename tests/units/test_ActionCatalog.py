@@ -32,5 +32,15 @@ class TestActionCatalog(unittest.TestCase):
         result = ActionCatalog.from_transcript_to_action("kubectl get pods")
         self.assertEqual("kubectl get pods", result)
 
+    # Test with a transcript that contains leading and trailing spaces
+    def test_leading_trailing_spaces(self):
+        result = ActionCatalog.from_transcript_to_action("   kubectl get pods   ")
+        self.assertEqual("kubectl get pods", result)
+    
+    # Test with a transcript that contains mixed case words
+    def test_mixed_case_transcript(self):
+        result = ActionCatalog.from_transcript_to_action("CuBeCtL GeT BoTs")
+        self.assertEqual("kubectl get pods", result)
+
 if __name__ == '__main__':
     unittest.main()
